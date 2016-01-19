@@ -5,8 +5,6 @@ from theano import function
 import scipy.io as sio
 import numpy as np
 
-from load import mnist
-
 
 class Model():
     def __init__(self, learning_rate, momentum, regularization, batch_size, epoch_time, disp_freq=1):
