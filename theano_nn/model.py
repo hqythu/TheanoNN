@@ -58,8 +58,6 @@ class Model():
 
     def train_model(self, train_x, train_y, valid_x, valid_y):
         for i in range(self.epoch_time):
-            if ((i+1) % self.disp_freq == 0):
-                print
             cost = []
             for start, end in zip(range(0, len(train_x), self.batch_size),
                 range(self.batch_size, len(train_x) + 1, self.batch_size)):
