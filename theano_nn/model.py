@@ -1,3 +1,4 @@
+import six
 import csv
 import theano
 from theano import tensor as T
@@ -58,7 +59,7 @@ class Model():
     def train_model(self, train_x, train_y, valid_x, valid_y):
         for i in range(self.epoch_time):
             if ((i+1) % self.disp_freq == 0):
-                print 'epoch:', i+1, ',',
+                print
             cost = []
             for start, end in zip(range(0, len(train_x), self.batch_size),
                 range(self.batch_size, len(train_x) + 1, self.batch_size)):
@@ -66,5 +67,5 @@ class Model():
             accuracy = np.mean(np.argmax(valid_y, axis=1) == self.predict(valid_x))
             valid_cost = self.cost_fun(valid_x, valid_y)
             if ((i+1) % self.disp_freq == 0):
-                print 'training cost:', np.mean(cost), ',', 'validation cost:', valid_cost, \
-                    ',', 'accuracy:', accuracy
+                six.print_('epoch:', i+1, ',', 'training cost:', np.mean(cost), ',', 'validation cost:', valid_cost, \
+                    ',', 'accuracy:', accuracy)
