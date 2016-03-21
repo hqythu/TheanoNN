@@ -46,10 +46,10 @@ class SoftmaxLayer(object):
 
 
 class FullConnectedLayer(object):
-    def __init__(self, num_in, num_out, b_init=0, activation=None):
+    def __init__(self, num_in, num_out, activation=None):
         bound = math.sqrt(6.0) / math.sqrt(num_in + num_out)
         w_values = np.asarray(np.random.uniform(-bound, bound, (num_in, num_out)), dtype='float32')
-        b_values = np.zeros(num_out, dtype='float32') + b_init
+        b_values = np.zeros(num_out, dtype='float32')
 
         self.w = theano.shared(w_values)
         self.b = theano.shared(b_values)
@@ -86,7 +86,7 @@ class ReshapeLayer(object):
 
 
 class ConvolutionLayer(object):
-    def __init__(self, kernel_size, num_out, num_in, b_init=0, activation=None):
+    def __init__(self, kernel_size, num_out, num_in, activation=None, border_mode='valid'):
         w_shape = (num_out, num_in) + kernel_size
         bound = math.sqrt(6.0) / math.sqrt((num_in + num_out) * np.prod(kernel_size))
         w_values = np.asarray(np.random.uniform(-bound, bound, w_shape), dtype='float32')
@@ -98,10 +98,11 @@ class ConvolutionLayer(object):
         self.params = [self.w, self.b]
         self.regularization = [T.sum(T.sqr(self.w))]
         self.activation = activation
+        self.border_mode = border_mode
 
     def get_output(self, input):
         self.input = input
-        conv_output = T.nnet.conv.conv2d(self.input, self.w) + self.b.dimshuffle('x', 0, 'x', 'x')
+        conv_output = T.nnet.conv2d(self.input, self.w, border_mode=self.border_mode) + self.b.dimshuffle('x', 0, 'x', 'x')
         self.output = conv_output if self.activation is None else self.activation(conv_output)
         return self.output
 
